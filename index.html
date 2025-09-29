@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil + Popup + Story Video + Music Player + Sosmed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Background Video */
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      filter: brightness(0.4);
+    }
+
+    /* Navbar */
+    nav.navbar {
+      background: linear-gradient(90deg, #001f2f, #003344);
+      padding: 10px 0;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 240, 255, 0.2);
+      position: relative;
+      z-index: 2;
+    }
+
+    nav.navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav.navbar li {
+      display: inline;
+      margin: 0 15px;
+    }
+
+    nav.navbar a {
+      color: #00f0ff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav.navbar a:hover {
+      color: yellow;
+    }
+
+    section {
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1, h2, p {
+      margin-bottom: 20px;
+    }
+
+    /* Profil Video */
+    .profile-video-container {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #333;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .profile-video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Story Video */
+    .story-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      padding: 10px 20px 30px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .story-item {
+      flex: 0 0 auto;
+      width: 120px;
+      height: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .story-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .story-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Popup */
+    #popup {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #popup.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #popup .popup-content {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 8px;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+      text-align: left;
+      color: #333;
+    }
+
+    #popup .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+    }
+
+    #popup .close-btn:hover {
+      color: #f44336;
+    }
+
+    /* Tentang Profesional */
+    #tentang {
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      text-align: left;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #tentang h2 {
+      color: #00f0ff;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    #tentang p {
+      margin-bottom: 12px;
+    }
+
+    /* Warna kuning untuk judul Profil, Story, dan nama Aliff */
+    #profil h1,
+    #video-story h2,
+    #profil p {
+      color: yellow;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .profile-video-container {
+        width: 150px;
+        height: 150px;
+      }
+
+      .popup-content {
+        width: 90%;
+        padding: 20px;
+      }
+
+      #tentang {
+        max-width: 90%;
+        font-size: 1rem;
+        padding: 20px 15px;
+      }
+    }
+
+    /* Music Player */
+    #music-player {
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+      max-width: 350px;
+      margin: 20px auto 60px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+    }
+    #music-player h2 {
+      color: yellow;
+      margin-bottom: 15px;
+    }
+    /* Ubah gambar menjadi bulat */
+    #music-player img {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+      margin-bottom: 15px;
+      object-fit: cover;
+    }
+    #music-player h3 {
+      margin: 0;
+    }
+    #music-player p {
+      margin: 0;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+    #play-pause {
+      background: linear-gradient(90deg, #00f0ff, #0066cc);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-size: 24px;
+      color: white;
+      margin-bottom: 15px;
+      transition: background 0.3s ease;
+    }
+    #play-pause:hover {
+      background: linear-gradient(90deg, #0066cc, #00f0ff);
+    }
+    #progress {
+      width: 100%;
+      cursor: pointer;
+      accent-color: yellow;
+    }
+
+    /* Kotak Sosmed samping kanan bawah */
+    .social-box {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(0,0,0,0.75);
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 140px;
+    }
+
+    .social-box a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .social-box a:hover {
+      background-color: #00f0ff;
+      color: #000;
+    }
+
+    /* Icon Sosmed (inline SVG or emoji for simplicity) */
+    .social-icon {
+      font-size: 1.4rem;
+      min-width: 24px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Specific colors for each social */
+    .telegram {
+      background: #0088cc;
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: white;
+    }
+
+    .whatsapp {
+      background: #25d366;
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: white;
+    }
+
+    .tiktok {
+      background: black;
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: white;
+    }
+
+    /* Nomor WA style */
+    .wa-number {
+      background: #128c7e;
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: normal;
+      user-select: text;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="video-bg">
+    <source src="https://files.catbox.moe/4ci872.mp4" type="video/mp4" />
+    Browser Anda tidak mendukung video background.
+  </video>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="#profil">Profil</a></li>
+      <li><a href="#tentang">Tentang</a></li>
+      <li><a href="https://instagram.com/@eks_aipp23" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+    </ul>
+  </nav>
+
+  <!-- Profil -->
+  <section id="profil">
+    <h1>Profil Saya</h1>
+    <div class="profile-video-container">
+      <video src="https://files.catbox.moe/irdpqp.mp4" autoplay muted loop playsinline></video>
+    </div>
+    <p>Halo! My Name Is Aliff.</p>
+  </section>
+
+  <!-- Music Player -->
+  <section id="music-player">
+    <h2>My Music Favorite</h2>
+    <img id="cover" src="https://files.catbox.moe/h0syp4.jpeg" alt="Album Cover" />
+    <h3 id="title">Back To Be Friend</h3>
+    <p id="artist">sombr</p>
+    <audio id="audio" src="https://files.catbox.moe/e2unds.m4a" preload="auto"></audio>
+    <button id="play-pause">▶️</button>
+    <input id="progress" type="range" min="0" max="100" value="0" />
+  </section>
+
+  <section id="tentang">
+  <h2>Tentang Aliff</h2>
+  <p>Halo! Saya <strong>Aliff</strong>, sekoalah di <strong>SMK Industri Kreatif</strong> dengan fokus pada bidang multimedia dan teknologi digital. Saya memiliki ketertarikan besar terhadap dunia desain visual, editing video, dan pengembangan web interaktif.</p>
+  <p>Saya terbiasa bekerja secara kreatif dan profesional dalam mengelola proyek visual, mulai dari pembuatan konten video hingga desain antarmuka website yang responsif dan user-friendly. Penguasaan software seperti Adobe Premiere, After Effects, dan berbagai teknologi web menjadi nilai tambah saya.</p>
+  <p>Visi saya adalah menjadi bagian dari industri kreatif yang terus berkembang, serta berkontribusi dalam menciptakan karya-karya digital yang berdampak positif. Saya juga aktif membangun jaringan kolaborasi dan selalu terbuka untuk peluang kerja sama yang inspiratif.</p>
+</section>
+
+
+  <!-- Story Video -->
+  <section id="video-story">
+    <h2>Story Video</h2>
+    <div class="story-container">
+      <div class="story-item">
+        <video src="https://files.catbox.moe/0lxtiw.mp4" muted autoplay loop playsinline></video>
+      </div>
+      <div class="story-item">
+        <video src="https://files.catbox.moe/zieukq.mp4" muted autoplay loop playsinline></video>
+      </div>
+      <div class="story-item">
+        <video src="https://files.catbox.moe/iy56ur.mp4" muted autoplay loop playsinline></video>
+      </div>
+      <div class="story-item">
+        <video src="https://files.catbox.moe/8djsd6.mp4" muted autoplay loop playsinline></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tombol Kunjungi Website -->
+<a href="https://love-ten-orcin.vercel.app/" target="_blank" class="btn-kunjungi">
+  🌐 Love Play 
+</a>
+
+
+  <!-- Kotak Sosmed -->
+<div class="social-box" aria-label="Social media links">
+  <a href="https://t.me/Aliftzycrt" target="_blank" rel="noopener noreferrer" title="Telegram">
+    <span class="social-icon telegram">✈️</span> Telegram
+  </a>
+  <a href="https://whatsapp.com/channel/0029VbAbqrkBvvseV1Cpk73p" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+    <span class="social-icon whatsapp">📱</span> Saluran WhatsApp
+  </a>
+  <a href="https://www.tiktok.com/@wannabeyours2317" target="_blank" rel="noopener noreferrer" title="TikTok">
+    <span class="social-icon tiktok">🎵</span> TikTok
+  </a>
+  
+  <!-- Ini bagian yang kamu ganti -->
+  <div class="wa-number" id="jam-digital" title="Jam Digital">
+    🕒 Time: --
+  </div>
+</div>
+
+<script>
+  // === JAM DIGITAL ===
+  function updateTime() {
+    const timeElem = document.getElementById('jam-digital');
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    timeElem.textContent = `🕒 Time: ${hours}:${minutes}:${seconds}`;
+  }
+
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // === Music Player Script ===
+  const audio = document.getElementById('audio');
+  const playPauseBtn = document.getElementById('play-pause');
+  const progress = document.getElementById('progress');
+
+  playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = '⏸️';
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = '▶️';
+    }
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.value = progressPercent || 0;
+  });
+
+  progress.addEventListener('input', () => {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  });
+</script>
+
+</body>
+</html>

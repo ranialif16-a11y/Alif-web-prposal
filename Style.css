@@ -1,0 +1,149 @@
+#link-external {
+  background: rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: yellow;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+#link-external h2 {
+  color: yellow;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#link-external a {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(45deg, #00f0ff, #0066cc);
+  color: white;
+  padding: 14px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.6);
+  overflow: hidden;
+  transition: all 0.4s ease;
+  letter-spacing: 1.2px;
+}
+
+#link-external a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: translateX(-100%) translateY(-50%) rotate(25deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+  border-radius: 30px;
+}
+
+#link-external a:hover::before {
+  transform: translateX(100%) translateY(-50%) rotate(25deg);
+}
+
+#link-external a:hover {
+  background: linear-gradient(45deg, #00ffff, #004477);
+  box-shadow: 0 12px 30px rgba(0, 255, 255, 0.8);
+  color: #fff;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  #link-external {
+    max-width: 90%;
+    padding: 20px 15px;
+  }
+
+  #link-external a {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+  }
+}
+#login-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#login-popup.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.login-content {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: center;
+  color: #333;
+}
+
+.close-login {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+}
+
+.close-login:hover {
+  color: #f44336;
+}
+
+#login-popup input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+#login-popup button {
+  background: #00f0ff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+#login-popup button:hover {
+  background: #0066cc;
+  color: #fff;
+}
+
+#error-msg {
+  color: red;
+  margin-bottom: 10px;
+}
